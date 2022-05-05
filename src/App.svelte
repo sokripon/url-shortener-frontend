@@ -1,9 +1,10 @@
-
 <script>
-    import {fly, fade } from 'svelte/transition';
+    import {fly, fade} from 'svelte/transition';
+    import CopyToClipboard from "svelte-copy-to-clipboard";
+
     let url = ""
     let lastUrl = "";
-    let resultUrl = "";
+    let resultUrl = [];
     let tooltip = "Click to copy";
     let btnDisabled = false;
     let infoText = "Enter a URL to shorten";
@@ -34,16 +35,18 @@
         infoStatus = "info";
         const requestOptions = {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: url })
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({url: url})
         };
         fetch('https://example.com/create', requestOptions)
             .then(res => res.json())
             .then(res => {
-                resultUrl = res.url;
+                resultUrl = [];
                 infoStatus = "success";
                 infoText = "Shortened URL";
-                tooltip = "Click to copy";
+                for (const [key, value] of Object.entries(res.extra)) {
+                    resultUrl = [...resultUrl, res.prefix + res.pseudo_id];
+                }
             })
             .catch(err => {
                 infoText = "Failed to shorten URL";
@@ -56,10 +59,17 @@
 
     }
 
-    function copyShortURL() {
-        navigator.clipboard.writeText(resultUrl);
-        tooltip = "Copied!";
+    const handleSuccessfullyCopied = (e) => {
+        infoStatus = "success";
+        infoText = "Copied to clipboard";
     }
+
+    const handleFailedCopy = () => {
+        infoStatus = "error";
+        infoText = "Failed to copy";
+    }
+
+
 </script>
 
 <main>
@@ -70,15 +80,21 @@
         <button class="btn-shorten" on:click={handleClick} disabled="{btnDisabled}">Submit</button>
 
     </div>
-
-    {#if resultUrl !== ""}
+    {#if resultUrl.length > 0}
         <div class="result" transition:fade={{duration:500}}>
-            <h2>Your shortened url is:</h2>
-            <div class="tooltip" on:click={copyShortURL}>{resultUrl}
-                <span class="tooltip-text">{tooltip}</span>
-            </div>
+            {#each resultUrl as url}
+
+                <h2>Your shortened url is:</h2>
+                <CopyToClipboard text={url} on:copy={handleSuccessfullyCopied} on:fail={handleFailedCopy} let:copy>
+                    <div class="tooltip" on:click={copy}>{url}
+                        <span class="tooltip-text">{tooltip}</span>
+                    </div>
+                </CopyToClipboard>
+
+            {/each}
         </div>
     {/if}
+
 
 </main>
 
@@ -91,7 +107,6 @@
     .success {
         color: green;
     }
-
 
 
     .input-url {
@@ -122,20 +137,20 @@
         padding: 5px 0;
         position: absolute;
         z-index: 1;
-        top: 150%;
-        left: 50%;
-        margin-left: -60px;
+        top: -5px;
+        right: 110%;
+        margin-right: 10px;
     }
 
     .tooltip .tooltip-text::after {
-        content: "";
+        content: " ";
         position: absolute;
-        bottom: 100%;
-        left: 50%;
-        margin-left: -5px;
+        top: 50%;
+        left: 100%; /* To the right of the tooltip */
+        margin-top: -5px;
         border-width: 5px;
         border-style: solid;
-        border-color: transparent transparent black transparent;
+        border-color: transparent transparent transparent black;
     }
 
     .btn-shorten {
