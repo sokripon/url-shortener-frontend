@@ -71,6 +71,10 @@
 
 </script>
 
+<svelte:head>
+    <title>Smol-URL</title>
+</svelte:head>
+
 <main>
     <div class="main">
         <h1>2d.rocks url-shortener</h1>
