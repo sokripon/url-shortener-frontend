@@ -57,17 +57,15 @@
 
     }
 
-    const handleSuccessfullyCopied = (e) => {
+    function handleSuccessfullyCopied (e) {
         infoStatus = "success";
         infoText = "Copied to clipboard";
     }
 
-    const handleFailedCopy = () => {
+    function handleFailedCopy () {
         infoStatus = "error";
         infoText = "Failed to copy";
     }
-
-
 </script>
 
 <svelte:head>
