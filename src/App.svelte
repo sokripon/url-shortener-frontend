@@ -37,7 +37,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url: url })
         };
-        fetch('https://example.com/create')
+        fetch('https://example.com/create', requestOptions)
             .then(res => res.json())
             .then(res => {
                 resultUrl = res.url;
