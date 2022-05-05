@@ -41,11 +41,11 @@
         fetch('https://example.com/create', requestOptions)
             .then(res => res.json())
             .then(res => {
-                resultUrl = [];
+                resultUrl = [res.prefix + res.pseudo_id];
                 infoStatus = "success";
                 infoText = "Shortened URL";
                 for (const [key, value] of Object.entries(res.extra)) {
-                    resultUrl = [...resultUrl, res.prefix + res.pseudo_id];
+                    resultUrl = [...resultUrl, res.prefix + value];
                 }
             })
             .catch(err => {
@@ -82,9 +82,8 @@
     </div>
     {#if resultUrl.length > 0}
         <div class="result" transition:fade={{duration:500}}>
+            <h2>Your shortened url is:</h2>
             {#each resultUrl as url}
-
-                <h2>Your shortened url is:</h2>
                 <CopyToClipboard text={url} on:copy={handleSuccessfullyCopied} on:fail={handleFailedCopy} let:copy>
                     <div class="tooltip" on:click={copy}>{url}
                         <span class="tooltip-text">{tooltip}</span>
