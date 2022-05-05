@@ -51,9 +51,8 @@
                 infoText = "Failed to shorten URL";
                 infoStatus = "error";
             });
-        let interval = setInterval(() => {
+        setTimeout(() => {
             btnDisabled = false;
-            clearInterval(interval);
         }, 5000);
 
     }
