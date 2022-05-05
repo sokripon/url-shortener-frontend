@@ -5,7 +5,6 @@
     let url = ""
     let lastUrl = "";
     let resultUrl = [];
-    let tooltip = "Click to copy";
     let btnDisabled = false;
     let infoText = "Enter a URL to shorten";
     let infoStatus = "info";
@@ -38,7 +37,7 @@
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({url: url})
         };
-        fetch('https://example.com/create', requestOptions)
+        fetch('https://2d.rocks/api/create', requestOptions)
             .then(res => res.json())
             .then(res => {
                 resultUrl = [res.prefix + res.pseudo_id];
@@ -87,9 +86,6 @@
             {#each resultUrl as url}
                 <CopyToClipboard text={url} on:copy={handleSuccessfullyCopied} on:fail={handleFailedCopy} let:copy>
                     <p class="url" on:click={copy}>{url}</p>
-                    <!--                    <div class="tooltip" on:click={copy} style="margin-inline: 10px">{url}-->
-                    <!--                        <span class="tooltip-text">{tooltip}</span>-->
-                    <!--                    </div>-->
                 </CopyToClipboard>
 
             {/each}
@@ -112,7 +108,6 @@
         color: green;
     }
 
-
     .input-url {
         width: 100%;
         padding: 12px 20px;
@@ -122,40 +117,6 @@
         border-radius: 4px;
         box-sizing: border-box;
     }
-
-    /*Copied from https://www.w3schools.com/css/css_tooltip.asp ehe*/
-    /*.tooltip {*/
-    /*    position: relative;*/
-    /*    display: inline-block;*/
-    /*    cursor: pointer;*/
-    /*}*/
-
-    /*.tooltip .tooltip-text {*/
-    /*    visibility: visible;*/
-    /*    width: 120px;*/
-    /*    background-color: black;*/
-    /*    color: #fff;*/
-    /*    text-align: center;*/
-    /*    border-radius: 6px;*/
-    /*    padding: 5px 0;*/
-    /*    position: absolute;*/
-    /*    z-index: 1;*/
-    /*    top: 150%;*/
-    /*    left: 50%;*/
-    /*    margin-left: -60px;*/
-    /*}*/
-
-    /*.tooltip .tooltip-text::after {*/
-    /*    content: " ";*/
-    /*    position: absolute;*/
-
-    /*    bottom: 100%;*/
-    /*    left: 50%;*/
-    /*    margin-left: -5px;*/
-    /*    border-width: 5px;*/
-    /*    border-style: solid;*/
-    /*    border-color: transparent transparent black transparent;*/
-    /*}*/
 
     .btn-shorten {
         background-color: #4CAF50;
@@ -190,6 +151,5 @@
         border-radius: 4px;
         box-shadow: 0 4px 8px 0 rgb(0, 201, 153), 0 6px 20px 0 rgb(87, 106, 232);
     }
-
 
 </style>
