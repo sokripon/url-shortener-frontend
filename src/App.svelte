@@ -1,8 +1,8 @@
-<script>
-    import {fly, fade} from 'svelte/transition';
+<script lang="ts">
+    import { fade } from "svelte/transition";
     import CopyToClipboard from "svelte-copy-to-clipboard";
 
-    let url = ""
+    let url = "";
     let lastUrl = "";
     let resultUrl = [];
     let btnDisabled = false;
@@ -33,13 +33,13 @@
         infoText = "Loading...";
         infoStatus = "info";
         const requestOptions = {
-            method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({url: url})
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: url }),
         };
-        fetch('https://2d.rocks/api/create', requestOptions)
-            .then(res => res.json())
-            .then(res => {
+        fetch("https://2d.rocks/api/create", requestOptions)
+            .then((res) => res.json())
+            .then((res) => {
                 resultUrl = [res.prefix + res.pseudo_id];
                 infoStatus = "success";
                 infoText = "Shortened URL";
@@ -47,22 +47,21 @@
                     resultUrl = [...resultUrl, res.prefix + value];
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 infoText = "Failed to shorten URL";
                 infoStatus = "error";
             });
         setTimeout(() => {
             btnDisabled = false;
         }, 5000);
-
     }
 
-    function handleSuccessfullyCopied (e) {
+    function handleSuccessfullyCopied(e) {
         infoStatus = "success";
         infoText = "Copied to clipboard";
     }
 
-    function handleFailedCopy () {
+    function handleFailedCopy() {
         infoStatus = "error";
         infoText = "Failed to copy";
     }
@@ -75,25 +74,36 @@
 <main>
     <div class="main">
         <h1>2d.rocks url-shortener</h1>
-        <input class="input-url" type="url" name="url" placeholder="Enter a url to shorten" bind:value={url}/>
-        <p class="{infoStatus}">Status: {infoText}</p>
-        <button class="btn-shorten" on:click={handleClick} disabled="{btnDisabled}">Submit</button>
-
+        <input
+            class="input-url"
+            type="url"
+            name="url"
+            placeholder="Enter a url to shorten"
+            bind:value={url}
+        />
+        <p class={infoStatus}>Status: {infoText}</p>
+        <button
+            class="btn-shorten"
+            on:click={handleClick}
+            disabled={btnDisabled}>Submit</button
+        >
     </div>
     {#if resultUrl.length > 0}
-        <div class="result" transition:fade={{duration:500}}>
+        <div class="result" transition:fade={{ duration: 500 }}>
             <h2>Your shortened url is:</h2>
             <h4>Hint: Click the link to copy</h4>
             {#each resultUrl as url}
-                <CopyToClipboard text={url} on:copy={handleSuccessfullyCopied} on:fail={handleFailedCopy} let:copy>
+                <CopyToClipboard
+                    text={url}
+                    on:copy={handleSuccessfullyCopied}
+                    on:fail={handleFailedCopy}
+                    let:copy
+                >
                     <p class="url" on:click={copy}>{url}</p>
                 </CopyToClipboard>
-
             {/each}
         </div>
     {/if}
-
-
 </main>
 
 <style>
@@ -120,7 +130,7 @@
     }
 
     .btn-shorten {
-        background-color: #4CAF50;
+        background-color: #4caf50;
         color: white;
         padding: 12px 20px;
         margin: 8px 0;
@@ -134,14 +144,12 @@
         cursor: wait;
     }
 
-
     :global(body) {
         background-color: #333333;
         background-size: cover;
         background-position: center;
         background-image: url("/images/bg2.svg");
     }
-
 
     main {
         text-align: center;
@@ -152,5 +160,4 @@
         border-radius: 4px;
         box-shadow: 0 4px 8px 0 rgb(0, 201, 153), 0 6px 20px 0 rgb(87, 106, 232);
     }
-
 </style>
