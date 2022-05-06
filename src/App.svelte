@@ -43,11 +43,11 @@
                 resultUrl = [res.prefix + res.pseudo_id];
                 infoStatus = "success";
                 infoText = "Shortened URL";
-                for (const [key, value] of Object.entries(res.extra)) {
+                for (const [, value] of Object.entries(res.extra)) {
                     resultUrl = [...resultUrl, res.prefix + value];
                 }
             })
-            .catch((err) => {
+            .catch(() => {
                 infoText = "Failed to shorten URL";
                 infoStatus = "error";
             });
@@ -56,12 +56,12 @@
         }, 5000);
     }
 
-    function handleSuccessfullyCopied(e) {
+    function onCopySuccess() {
         infoStatus = "success";
         infoText = "Copied to clipboard";
     }
 
-    function handleFailedCopy() {
+    function onCopyFail() {
         infoStatus = "error";
         infoText = "Failed to copy";
     }
@@ -95,8 +95,8 @@
             {#each resultUrl as url}
                 <CopyToClipboard
                     text={url}
-                    on:copy={handleSuccessfullyCopied}
-                    on:fail={handleFailedCopy}
+                    on:copy={onCopySuccess}
+                    on:fail={onCopyFail}
                     let:copy
                 >
                     <p class="url" on:click={copy}>{url}</p>
