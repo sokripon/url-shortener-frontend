@@ -148,7 +148,7 @@
         background-color: #333333;
         background-size: cover;
         background-position: center;
-        background-image: url("/images/bg2.svg");
+        background-image: url("images/bg2.svg");
     }
 
     main {
