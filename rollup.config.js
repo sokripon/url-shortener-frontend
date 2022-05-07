@@ -7,7 +7,6 @@ import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
 import copy from 'rollup-plugin-copy';
-import del from 'rollup-plugin-delete'
 
 const production = !process.env.ROLLUP_WATCH;
 
