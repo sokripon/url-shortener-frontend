@@ -37,14 +37,14 @@
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({url: url})
         };
-        fetch('https://2d.rocks/api/create', requestOptions)
+        fetch('/api/create', requestOptions)
             .then(res => res.json())
             .then(res => {
-                resultUrl = [res.prefix + res.pseudo_id];
+                resultUrl = [window.location.href + res.pseudo_id];
                 infoStatus = "success";
                 infoText = "Shortened URL";
                 for (const [key, value] of Object.entries(res.extra)) {
-                    resultUrl = [...resultUrl, res.prefix + value];
+                    resultUrl = [...resultUrl, window.location.href + value];
                 }
             })
             .catch(err => {
@@ -57,12 +57,12 @@
 
     }
 
-    function handleSuccessfullyCopied (e) {
+    function handleSuccessfullyCopied(e) {
         infoStatus = "success";
         infoText = "Copied to clipboard";
     }
 
-    function handleFailedCopy () {
+    function handleFailedCopy() {
         infoStatus = "error";
         infoText = "Failed to copy";
     }
