@@ -10,7 +10,7 @@
     let infoStatus = "info";
 
     function handleClick() {
-        if (url === "") {
+        if (url == "") {
             infoText = "Please enter a URL";
             infoStatus = "error";
             return;
@@ -37,7 +37,7 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ url: url }),
         };
-        fetch("https://2d.rocks/api/create", requestOptions)
+        fetch("/api/create", requestOptions)
             .then((res) => res.json())
             .then((res) => {
                 resultUrl = [res.prefix + res.pseudo_id];
