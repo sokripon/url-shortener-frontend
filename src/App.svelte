@@ -43,7 +43,7 @@
                 resultUrl = [window.location.href + res.pseudo_id];
                 infoStatus = "success";
                 infoText = "Shortened URL";
-                for (const [, value] of Object.entries(res.extra)) {
+                for (let value of Object.values(res.extra)) {
                     resultUrl = [...resultUrl, window.location.href + value];
                 }
             })
