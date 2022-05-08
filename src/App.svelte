@@ -15,7 +15,7 @@
             infoStatus = "error";
             return;
         }
-        if (url === lastUrl) {
+        if (url == lastUrl) {
             infoText = "You have to enter a new URL";
             infoStatus = "error";
             return;
@@ -34,8 +34,8 @@
         infoStatus = "info";
         const requestOptions = {
             method: "PUT",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({url: url}),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: url }),
         };
         fetch("/api/create", requestOptions)
             .then((res) => res.json())
@@ -75,19 +75,19 @@
     <div class="main">
         <h1>2d.rocks url-shortener</h1>
         <input
-                bind:value={url}
-                class="input-url"
-                name="url"
-                placeholder="Enter a url to shorten"
-                type="url"
+            bind:value={url}
+            class="input-url"
+            name="url"
+            placeholder="Enter a url to shorten"
+            type="url"
         />
         <p class={infoStatus}>Status: {infoText}</p>
         <button
-                class="btn-shorten"
-                disabled={btnDisabled}
-                on:click={handleClick}>Submit
-        </button
-        >
+            class="btn-shorten"
+            disabled={btnDisabled}
+            on:click={handleClick}
+            >Submit
+        </button>
     </div>
     {#if resultUrl.length > 0}
         <div class="result" transition:fade={{ duration: 500 }}>
@@ -95,10 +95,10 @@
             <h4>Hint: Click the link to copy</h4>
             {#each resultUrl as url}
                 <CopyToClipboard
-                        text={url}
-                        on:copy={onCopySuccess}
-                        on:fail={onCopyFail}
-                        let:copy
+                    text={url}
+                    on:copy={onCopySuccess}
+                    on:fail={onCopyFail}
+                    let:copy
                 >
                     <p class="url" on:click={copy}>{url}</p>
                 </CopyToClipboard>
