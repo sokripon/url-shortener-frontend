@@ -1,10 +1,34 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
-    import CopyToClipboard from "svelte-copy-to-clipboard";
+    import { writable } from "svelte/store";
+    import Shortened from "./components/Shortened.svelte";
+
+    type Entry = {
+        url: string;
+        pseudo_id: number;
+        extra: { [key: string]: string };
+    }
+
+    const storedShortened = localStorage.getItem("shortened");
+    let parsed: Array<Entry> = JSON.parse(storedShortened);
+    export const shortened = writable(parsed === null ? [] : parsed);
+
+    shortened.subscribe((value) => {
+        localStorage.setItem("shortened", JSON.stringify(value));
+        parsed = JSON.parse(localStorage.getItem("shortened"));
+    });
+
+
+    function addShortened(data) {
+        parsed = [data, ...parsed];
+        localStorage.setItem("shortened", JSON.stringify(parsed));
+
+
+    }
+
 
     let url = "";
     let lastUrl = "";
-    let resultUrl = [];
     let btnDisabled = false;
     let infoText = "Enter a URL to shorten";
     let infoStatus = "info";
@@ -34,18 +58,19 @@
         infoStatus = "info";
         const requestOptions = {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ url: url }),
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({url: url}),
         };
         fetch("/api/create", requestOptions)
-            .then((res) => res.json())
-            .then((res) => {
-                resultUrl = [window.location.href + res.pseudo_id];
+            .then(async res => {
+                if (res.status !== 200) {
+                    throw new Error(res.statusText);
+                }
+                let data: Entry = await res.json();
+                addShortened(data);
+
                 infoStatus = "success";
                 infoText = "Shortened URL";
-                for (let value of Object.values(res.extra)) {
-                    resultUrl = [...resultUrl, window.location.href + value];
-                }
             })
             .catch(() => {
                 infoText = "Failed to shorten URL";
@@ -56,15 +81,6 @@
         }, 5000);
     }
 
-    function onCopySuccess() {
-        infoStatus = "success";
-        infoText = "Copied to clipboard";
-    }
-
-    function onCopyFail() {
-        infoStatus = "error";
-        infoText = "Failed to copy";
-    }
 </script>
 
 <svelte:head>
@@ -72,45 +88,36 @@
 </svelte:head>
 
 <main>
+
     <div class="main">
+
         <h1>2d.rocks url-shortener</h1>
         <input
-            bind:value={url}
-            class="input-url"
-            name="url"
-            placeholder="Enter a url to shorten"
-            type="url"
+                bind:value={url}
+                class="input-url"
+                name="url"
+                placeholder="Enter a url to shorten"
+                type="url"
         />
         <p class={infoStatus}>Status: {infoText}</p>
         <button
-            class="btn-shorten"
-            disabled={btnDisabled}
-            on:click={handleClick}
-            >Submit
+                class="btn-shorten"
+                disabled={btnDisabled}
+                on:click={handleClick}
+        >Submit
         </button>
     </div>
-    {#if resultUrl.length > 0}
+    {#if true}
         <div class="result" transition:fade={{ duration: 500 }}>
-            <h2>Your shortened url is:</h2>
-            <h4>Hint: Click the link to copy</h4>
-            {#each resultUrl as url}
-                <CopyToClipboard
-                    text={url}
-                    on:copy={onCopySuccess}
-                    on:fail={onCopyFail}
-                    let:copy
-                >
-                    <p class="url" on:click={copy}>{url}</p>
-                </CopyToClipboard>
+            <h2>History</h2>
+            {#each parsed as entry}
+                <Shortened originalUrl="{entry.url}" id={entry.pseudo_id} extraData={entry.extra}/>
             {/each}
         </div>
     {/if}
 </main>
 
 <style>
-    .url {
-        cursor: pointer;
-    }
 
     .error {
         color: red;
@@ -124,7 +131,7 @@
         width: 100%;
         padding: 12px 20px;
         margin: 8px 0;
-        display: inline-block;
+        /*display: inline-block;*/
         border: 1px solid #ccc;
         border-radius: 4px;
         box-sizing: border-box;
