@@ -91,7 +91,7 @@
 
     <div class="main">
 
-        <h1>2d.rocks url-shortener</h1>
+        <h1>Smol-URL</h1>
         <input
                 bind:value={url}
                 class="input-url"
