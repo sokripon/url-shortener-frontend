@@ -83,7 +83,7 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        width: auto;
+        width: 100%;
         margin: 1px;
     }
 
