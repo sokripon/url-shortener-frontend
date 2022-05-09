@@ -83,17 +83,6 @@
 
 </script>
 
-<svelte:head>
-    <title>Smol-URL</title>
-    <meta property="og:title" content="Smol-URL">
-    <meta property="og:description" content="A simple URL shortener">
-    <meta property="og:url" content="https://s.2d.rocks/">
-    <meta property="og:image" content="https://s.2d.rocks/images/logo.png">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Smol-URL">
-    <meta name="theme-color" content="#6600ff">
-</svelte:head>
-
 <main>
 
     <div class="main">
